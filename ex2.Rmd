@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Bias of Monte Carlo methods in Standard Normal Distribution"
 output: pdf_document
 ---
 
