@@ -1,5 +1,5 @@
 ---
-title: "Bias of Monte Carlo methods in Standard Normal Distribution"
+title: "Ex2"
 output: pdf_document
 ---
 
