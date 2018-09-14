@@ -1,378 +1,55 @@
 ---
-title: "Ex2"
+title: "Bias of Monte Carlo Method in Standard Normal Distribution"
+author:
+  - Guanting Wei
+date: "Sep.13.2018"
+documentclass: article
+papersize: letter
+fontsize: 11pt
+keywords: Bias, Normal Distribution, Monte Carlo
 output: pdf_document
+abstract: |
+  This experiment uses Monte Carlo Method to estimate the real value of Standard Normal Distribution and   get the bias.
+  
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Abstract
-It is hard to calculate distribution function of N(0,1).
+
+# Introduction
+It is hard to calculate distribution function of N(0,1) directly.
 $$\Phi(t) = \int _{-\infty}^{t} \frac{1}{\sqrt{2 \pi}} e^{-y^2/2} dy$$
 Instead, we can use Monte Carlo methods to estimate its value: 
 $$\hat{\Phi}(t) = \frac{1}{n} \sum _{i=1}^{n} I (X_i \leq t)$$
-In this experiment, we calculate when$$t\in{0.0,0.67,0.84,1.28,1.65,2.32,2.58,3.09,3.72}$$n times($$n\in{10^2,10^3,10^4}$$)
+In this experiment, we calculate when $t\in{0.0,0.67,0.84,1.28,1.65,2.32,2.58,3.09,3.72}$ n times($n\in{10^2,10^3,10^4}$)
 
 # Code
-I use rnorm to get a random number "a" according to Normal Distribution. The proportion of a which is smaller than t is similar to the number we want. Repeat the experimant 100 times and store all data in one array.
+I use rnorm to get a random number "a" according to Normal Distribution. The proportion of a which is smaller than t is similar to the number we want. Repeat the experimant 100 times and store all data in one array $T$.
 ```{r norm}
-T=array(0,dim=c(9,3,100),dimnames=list(c("0.0","0.67","0.84","1.28","1.65","2.32","2.58","3.09","3.72"),c("10^2","10^3","10^4")))
+n <- c(100,1000,10000)
+t <- c(0.0,0.67,0.84,1.28,1.65,2.32,2.58,3.09,3.72)
+T=array(0,dim=c(length(t),length(n),100),
+        dimnames=list(c("0.0","0.67","0.84","1.28","1.65","2.32","2.58","3.09","3.72"),
+                      c("10^2","10^3","10^4")))
 for(i in 1:100){
-#n=10^2 t=0
-n=10^2
-t=0
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[1,1,i]=T[1,1,i]+b
+  for(j in 1:length(t)){
+    for(k in 1:length(n)){
+      for (l in 1:n[k]){
+      a <- rnorm(1, mean=0, sd=1)
+      if(a<=t[j])
+      {b=1}
+      else
+      {b=0}
+      T[j,k,i]=T[j,k,i]+b
+    }
+    T[j,k,i]=T[j,k,i]/n[k]
+    }
+  }
 }
-T[1,1,i]=T[1,1,i]/n
-
-#n=10^3 t=0
-n=10^3
-t=0
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[1,2,i]=T[1,2,i]+b
-}
-T[1,2,i]=T[1,2,i]/n
-
-#n=10^4 t=0
-n=10^4
-t=0
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[1,3,i]=T[1,3,i]+b
-}
-T[1,3,i]=T[1,3,i]/n
-
-#n=10^2 t=0.67
-n=10^2
-t=0.67
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[2,1,i]=T[2,1,i]+b
-}
-T[2,1,i]=T[2,1,i]/n
-
-#n=10^3 t=0.67
-n=10^3
-t=0.67
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[2,2,i]=T[2,2,i]+b
-}
-T[2,2,i]=T[2,2,i]/n
-
-#n=10^4 t=0.67
-n=10^4
-t=0.67
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[2,3,i]=T[2,3,i]+b
-}
-T[2,3,i]=T[2,3,i]/n
-
-#n=10^2 t=0.84
-n=10^2
-t=0.84
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[3,1,i]=T[3,1,i]+b
-}
-T[3,1,i]=T[3,1,i]/n
-
-#n=10^3 t=0.84
-n=10^3
-t=0.84
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[3,2,i]=T[3,2,i]+b
-}
-T[3,2,i]=T[3,2,i]/n
-
-#n=10^4 t=0.84
-n=10^4
-t=0.84
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[3,3,i]=T[3,3,i]+b
-}
-T[3,3,i]=T[3,3,i]/n
-
-#n=10^2 t=1.28
-n=10^2
-t=1.28
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[4,1,i]=T[4,1,i]+b
-}
-T[4,1,i]=T[4,1,i]/n
-
-#n=10^3 t=1.28
-n=10^3
-t=1.28
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[4,2,i]=T[4,2,i]+b
-}
-T[4,2,i]=T[4,2,i]/n
-
-#n=10^4 t=1.28
-n=10^4
-t=1.28
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[4,3,i]=T[4,3,i]+b
-}
-T[4,3,i]=T[4,3,i]/n
-
-#n=10^2 t=1.65
-n=10^2
-t=1.65
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[5,1,i]=T[5,1,i]+b
-}
-T[5,1,i]=T[5,1,i]/n
-
-#n=10^3 t=1.65
-n=10^3
-t=1.65
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[5,2,i]=T[5,2,i]+b
-}
-T[5,2,i]=T[5,2,i]/n
-
-#n=10^4 t=1.65
-n=10^4
-t=1.65
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[5,3,i]=T[5,3,i]+b
-}
-T[5,3,i]=T[5,3,i]/n
-
-#n=10^2 t=2.32
-n=10^2
-t=2.32
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[6,1,i]=T[6,1,i]+b
-}
-T[6,1,i]=T[6,1,i]/n
-
-#n=10^3 t=2.32
-n=10^3
-t=2.32
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[6,2,i]=T[6,2,i]+b
-}
-T[6,2,i]=T[6,2,i]/n
-
-#n=10^4 t=2.32
-n=10^4
-t=2.32
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[6,3,i]=T[6,3,i]+b
-}
-T[6,3,i]=T[6,3,i]/n
-
-#n=10^2 t=2.58 
-n=10^2
-t=2.58 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[7,1,i]=T[7,1,i]+b
-}
-T[7,1,i]=T[7,1,i]/n
-
-#n=10^3 t=2.58 
-n=10^3
-t=2.58 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[7,2,i]=T[7,2,i]+b
-}
-T[7,2,i]=T[7,2,i]/n
-
-#n=10^4 t=2.58 
-n=10^4
-t=2.58 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[7,3,i]=T[7,3,i]+b
-}
-T[7,3,i]=T[7,3,i]/n
-
-#n=10^2 t=3.09
-n=10^2
-t=3.09
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[8,1,i]=T[8,1,i]+b
-}
-T[8,1,i]=T[8,1,i]/n
-
-#n=10^3 t=3.09
-n=10^3
-t=3.09
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[8,2,i]=T[8,2,i]+b
-}
-T[8,2,i]=T[8,2,i]/n
-
-#n=10^4 t=3.09
-n=10^4
-t=3.09
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[8,3,i]=T[8,3,i]+b
-}
-T[8,3,i]=T[8,3,i]/n
-
-#n=10^2 t=3.72 
-n=10^2
-t=3.72 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[9,1,i]=T[9,1,i]+b
-}
-T[9,1,i]=T[9,1,i]/n
-
-#n=10^3 t=3.72 
-n=10^3
-t=3.72 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[9,2,i]=T[9,2,i]+b
-}
-T[9,2,i]=T[9,2,i]/n
-
-#n=10^4 t=3.72 
-n=10^4
-t=3.72 
-for(value in 1:n)
-  {a <- rnorm(1, mean=0, sd=1)
-if(a<=t)
-  {b=1}
-  else
-    {b=0}
-T[9,3,i]=T[9,3,i]+b
-}
-T[9,3,i]=T[9,3,i]/n
-}
-print(T)
 ```
 
-# true value
+# True Value
+I use pnorm to calculate the true value and store the data in an array $V$.
 ```{r}
 V=array(0,dim=c(9,1),dimname=list(c("0.0","0.67","0.84","1.28","1.65","2.32","2.58","3.09","3.72"),
                                   c("true")))
@@ -385,11 +62,17 @@ V[6]=pnorm(2.32)
 V[7]=pnorm(2.58)
 V[8]=pnorm(3.09)
 V[9]=pnorm(3.72)
-print(V)
-
 ```
 
-# boxplot of bias
+## Table
+```{r}
+knitr::kable(T[ , ,1], booktabs = TRUE, caption = 'one of the 100 experiments')
+knitr::kable(V, booktabs = TRUE, caption = 'True Value')
+```
+
+# Boxplot of Bias
+First, we need to calculate all the bias and use those bias to make box plots.
+
 ## n=10^2
 ```{r}
 boxplot(T[1,1, ]-V[1],T[2,1, ]-V[2],T[3,1, ]-V[3],T[4,1, ]-V[4],T[5,1, ]-V[5],T[6,1, ]-V[6],
@@ -410,3 +93,5 @@ boxplot(T[1,3, ]-V[1],T[2,3, ]-V[2],T[3,3, ]-V[3],T[4,3, ]-V[4],T[5,3, ]-V[5],T[
         T[7,3, ]-V[7],T[8,3, ]-V[8],T[9,3, ]-V[9],
         names = c("0.0","0.67","0.84","1.28","1.65","2.32","2.58","3.09","3.72"))
 ```
+
+
